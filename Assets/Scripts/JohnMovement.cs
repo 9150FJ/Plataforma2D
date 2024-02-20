@@ -9,7 +9,9 @@ public class JohnMovement : MonoBehaviour
     private float horizontal;
     public float Speed;
     public float JumpForce;
-    
+
+    private bool Grounded;
+
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -19,19 +21,34 @@ public class JohnMovement : MonoBehaviour
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
-        if (Input.GetKeyDown(KeyCode.W))
+        Debug.DrawRay(transform.position, Vector3.down * 0.1f, Color.red);
+
+        if (Physics2D.Raycast(transform.position, Vector3.down, 0.1f))
+        {
+            Grounded = true;
+        }
+        else
+        {
+            Grounded = false;
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.W) && Grounded)
         {
             Jump();
         }
     }
 
 
-   void FixedUpdate(){
+    void FixedUpdate()
+    {
 
         Rigidbody2D.velocity = new Vector2(horizontal, Rigidbody2D.velocity.y);
-   } 
+    }
 
-   private void Jump(){
+    private void Jump()
+    {
         Rigidbody2D.AddForce(Vector2.up * JumpForce);
-   }
+    }
 }
