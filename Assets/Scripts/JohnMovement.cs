@@ -12,9 +12,16 @@ public class JohnMovement : MonoBehaviour
 
     private bool Grounded;
 
+
+    private Animator Animator;
+
+
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
+
+        Animator = GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
@@ -22,6 +29,7 @@ public class JohnMovement : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         Debug.DrawRay(transform.position, Vector3.down * 0.1f, Color.red);
+        Animator.SetBool("running",horizontal !=0.0f);
 
         if (Physics2D.Raycast(transform.position, Vector3.down, 0.1f))
         {
@@ -32,12 +40,15 @@ public class JohnMovement : MonoBehaviour
             Grounded = false;
         }
 
-
+        
 
         if (Input.GetKeyDown(KeyCode.W) && Grounded)
         {
             Jump();
         }
+              if(horizontal < 0.0f) transform.localScale = new Vector3(-1.0f,1.0f,1.0f);
+        else if (horizontal > 0.0f) transform.localScale = new Vector3(1.0f,1.0f,1.0f);
+
     }
 
 
