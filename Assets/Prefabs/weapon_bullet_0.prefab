@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 2
+  sonido: {fileID: 8300000, guid: 0e3fc004a497a44caa8599b9b535561f, type: 3}
 --- !u!50 &2605952704293401769
 Rigidbody2D:
   serializedVersion: 4
@@ -157,7 +158,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

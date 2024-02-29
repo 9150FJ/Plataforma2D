@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public class JohnMovement : MonoBehaviour
 {
@@ -18,12 +21,16 @@ public class JohnMovement : MonoBehaviour
     public GameObject prefabBullet;
 
     private float LastShoot;
+    private float Health;
+
+    public Image barraDeVida;
+    public float videaMaxima=5;
 
 
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
-
+        Health=videaMaxima;
         Animator = GetComponent<Animator>();
 
     }
@@ -33,7 +40,7 @@ public class JohnMovement : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         Debug.DrawRay(transform.position, Vector3.down * 0.1f, Color.red);
-        Animator.SetBool("running",horizontal !=0.0f);
+        Animator.SetBool("running", horizontal != 0.0f);
 
         if (Physics2D.Raycast(transform.position, Vector3.down, 0.1f))
         {
@@ -44,33 +51,48 @@ public class JohnMovement : MonoBehaviour
             Grounded = false;
         }
 
-        
+
 
         if (Input.GetKeyDown(KeyCode.W) && Grounded)
         {
             Jump();
         }
-        if(Input.GetKeyDown(KeyCode.Space) && Time.time > LastShoot + 0.25f){
-            Shoot();  
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > LastShoot + 0.25f)
+        {
+            Shoot();
             LastShoot = Time.time;
 
         }
 
 
-              if(horizontal < 0.0f) transform.localScale = new Vector3(-1.0f,1.0f,1.0f);
-        else if (horizontal > 0.0f) transform.localScale = new Vector3(1.0f,1.0f,1.0f);
+        if (horizontal < 0.0f) transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        else if (horizontal > 0.0f) transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
     }
-    private void Shoot(){
-    // Pintamos el Prefab en scena, en la posición indicada y la rotación=0
+    private void Shoot()
+    {
+        // Pintamos el Prefab en scena, en la posición indicada y la rotación=0
         Vector3 direction;
-        if ( transform.localScale.x == 1.0f ) direction = Vector3.right;
+        if (transform.localScale.x == 1.0f) direction = Vector3.right;
         else direction = Vector3.left;
 
 
-        GameObject bullet = Instantiate(prefabBullet,transform.position + direction *0.1f, Quaternion.identity);
+        GameObject bullet = Instantiate(prefabBullet, transform.position + direction * 0.1f, Quaternion.identity);
 
         bullet.GetComponent<BulletScript>().SetDirection(direction);
+
+    }
+    public void Hit(float danio)
+    {
+        Health = Health - danio;
+        if (Health<=0) {
+        
+            Destroy(gameObject);
+            SceneManager.LoadScene(2);
+
+        
+        }
+        barraDeVida.fillAmount = Health/videaMaxima;
 
     }
 
@@ -84,5 +106,8 @@ public class JohnMovement : MonoBehaviour
     private void Jump()
     {
         Rigidbody2D.AddForce(Vector2.up * JumpForce);
+    }
+    public float getVidaMaxima(){
+        return videaMaxima;
     }
 }
